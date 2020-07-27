@@ -46,8 +46,9 @@ def _tidy_metadata(md):
 
 
 def generate_metadata(name, function, tidy=True):
-    if not inspect.isfunction(function):
+    if name[:1] == "_" or not inspect.isfunction(function):
         return {}
+
     hints = typing.get_type_hints(function, globals())
     params = [
         {"name": k, "description": None, **_convert_hint(hints.get(k))}
