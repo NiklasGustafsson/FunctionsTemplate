@@ -18,9 +18,14 @@ for n in dir(Functions):
     print("-" * 80)
     print("Checking", n)
     try:
-        md = generate_metadata(n, f)
+        md = generate_metadata(n, f, tidy=False)
     except Exception as ex:
         print("Failed to calculate metadata", ex)
+        continue
+    try:
+        md = generate_metadata(n, f, tidy=True)
+    except Exception as ex:
+        print("Failed to calculate tidied metadata", ex)
         continue
     print("Metadata:")
     pprint(md)
