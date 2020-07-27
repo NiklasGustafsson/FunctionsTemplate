@@ -5,7 +5,7 @@ from pathlib import Path
 from pprint import pprint
 
 ROOT = Path(__file__).absolute().parent.parent
-sys.path.insert(0, str(ROOT / ".api"))
+sys.path.insert(0, str(ROOT / "api"))
 sys.path.insert(0, str(ROOT))
 
 import Functions
