@@ -17,6 +17,3 @@ jobs:
     - uses: azure/webapps-deploy@v2
       with:
         publish-profile: ${{ secrets.AzurePublishProfile }}
-
-    - name: logout
-      run: az logout
