@@ -38,7 +38,7 @@ def get_metadata(functions):
     }
     return func.HttpResponse(
         json.dumps(md),
-        content_type="application/json",
+        mimetype="application/json",
     )
 
 
@@ -58,5 +58,5 @@ def execute_function(functions, payload):
     ret = f(*args)
     return func.HttpResponse(
         json.dumps(ret, default=json_default),
-        content_type="application/json",
+        mimetype="application/json",
     )
