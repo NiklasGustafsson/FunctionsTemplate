@@ -4,9 +4,9 @@ import sys
 
 import azure.functions as func
 from pathlib import Path
-from metadata import generate_metadata
 
 sys.path.insert(0, str(Path(__file__).absolute().parent))
+from metadata import generate_metadata
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
