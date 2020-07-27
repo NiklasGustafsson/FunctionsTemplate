@@ -27,12 +27,16 @@ def _convert_scalar(hint):
 
 def _convert_hint(hint):
     if not hint:
-        return {"type": "any", "dimensionality": "scalar"}
+        return {}
     kind = _convert_matrix(hint)
-    if kind:
+    if kind is not None:
         return {"type": kind, "dimensionality": "matrix"}
-    kind = _convert_scalar(hint) or "any"
-    return {"type": kind, "dimensionality": "scalar"}
+    kind = _convert_scalar(hint)
+    return {"type": kind}
+
+
+def _tidy_metadata(md):
+    return {k: v for k, v in md.items() if v}
 
 
 def generate_metadata(name, function):
@@ -40,14 +44,18 @@ def generate_metadata(name, function):
         return {}
     hints = typing.get_type_hints(function, globals())
     params = [
-        {"name": k, "description": "", **_convert_hint(hints.get(k))}
+        {"name": k, "description": None, **_convert_hint(hints.get(k))}
         for k in inspect.getfullargspec(function).args
     ]
 
-    return {
+    params = [_tidy_metadata(md) for md in params]
+
+    md = {
         "id": name,
         "name": name,
         "description": getattr(function, "__doc__", None) or "",
         "parameters": params,
         "result": _convert_hint(hints.get("return")),
     }
+    md = _tidy_metadata(md)
+    return md

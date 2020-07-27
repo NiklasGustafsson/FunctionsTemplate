@@ -34,7 +34,8 @@ def json_default(o):
 def get_metadata(functions):
     fns = ((n, getattr(functions, n, None)) for n in dir(functions))
     md = {
-        "functions": [generate_metadata(n, f) for n, f in fns if f and callable(f)]
+        "functions": [generate_metadata(n, f) for n, f in fns
+                      if f and callable(f) and n[:1] != "_"]
     }
     return func.HttpResponse(
         json.dumps(md),
