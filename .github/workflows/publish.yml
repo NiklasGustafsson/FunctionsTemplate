@@ -3,7 +3,7 @@ on:
     branches:
     - master
 
-name: Node.js
+name: Publish
 
 jobs:
   build-and-deploy:
