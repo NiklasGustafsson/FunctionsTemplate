@@ -1,0 +1,22 @@
+on:
+  push:
+    branches:
+    - master
+
+name: Node.js
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout' 
+      uses: actions/checkout@master
+   
+    - name: 'Setup Python'
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.8'
+
+    - name: 'Check functions'
+      run: |
+        python3 .scripts/check.py
