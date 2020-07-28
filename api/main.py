@@ -72,8 +72,8 @@ def json_default(o):
         pass
     else:
         return tolist()
-    # Handle everything else by getting its vars
-    return vars(o)
+    # Handle everything else by returning its repr
+    return repr(o)
 
 
 def execute_function(functions, payload):
