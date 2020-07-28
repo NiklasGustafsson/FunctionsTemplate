@@ -1,5 +1,5 @@
+from __future__ import annotations
 import itertools
-import pandas
 
 def myadd(x, y):
     """Basic addition test"""
@@ -11,10 +11,15 @@ def badadd(x : float, y : float) -> float:
     return x + y + 1
 
 
-#def get_table() -> "NumberMatrix":
-def get_table() -> pandas.DataFrame:
+def get_table() -> NumberMatrix:
     """Ensure list-of-list can be returned"""
     return [[1, 2], [3, 4]]
+
+
+def get_table_2() -> pandas.DataFrame:
+    """Ensure DataFrame can be returned"""
+    import pandas as pd
+    return pd.DataFrame([[1, 2], [3, 4]])
 
 
 # Constants should not be exported
@@ -28,7 +33,7 @@ def _column_names():
         yield from (f"{c}{i}" for c in alphabet)
 
 
-def get_pandas(rows : int, columns : int) -> "NumberMatrix":
+def get_pandas(rows : int, columns : int) -> NumberMatrix:
     """Ensure pandas DataFrames can be returned
 
     rows: Number of rows to generate
@@ -44,7 +49,7 @@ def get_pandas(rows : int, columns : int) -> "NumberMatrix":
     return df
 
 
-def get_names(columns : int) -> "StringMatrix":
+def get_names(columns : int) -> StringMatrix:
     """Test returning a matrix of strings
 
     columns: Number of columns worth of names to return"""
