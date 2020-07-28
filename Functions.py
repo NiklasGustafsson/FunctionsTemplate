@@ -1,5 +1,6 @@
 from __future__ import annotations
 import itertools
+import pandas as pd
 
 def myadd(x, y):
     """Basic addition test"""
@@ -16,9 +17,8 @@ def get_table() -> NumberMatrix:
     return [[1, 2], [3, 4]]
 
 
-def get_table_2() -> pandas.DataFrame:
+def get_table_2() -> pd.DataFrame:
     """Ensure DataFrame can be returned"""
-    import pandas as pd
     return pd.DataFrame([[1, 2], [3, 4]])
 
 
