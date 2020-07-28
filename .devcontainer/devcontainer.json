@@ -7,4 +7,18 @@
         "ms-python.python"
     ],
     "forwardPorts": [5000],
+    "settings": {
+        "launch": {
+            "configurations": [
+                {
+                    "name": "Debug Functions",
+                    "type": "python",
+                    "request": "launch",
+                    "program": ".scripts/serve.py",
+                    "args": ["localhost", "5000"],
+                    "console": "integratedTerminal"
+                }
+            ]
+        }
+    }
 }

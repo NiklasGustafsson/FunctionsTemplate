@@ -38,6 +38,15 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
 
-server_address = ('', 5000)
-httpd = HTTPServer(('', 5000), Handler)
+httpd_address = ['localhost', 5000]
+if len(sys.argv) >= 2:
+    if sys.argv[1] in {"-h", "-?"}:
+        print("Usage: python3 .scripts/serve.py [HOST=localhost [PORT=5000]]")
+        sys.exit(1)
+
+    httpd_address[0] = sys.argv[1]
+if len(sys.argv) >= 3:
+    httpd_address[1] = int(sys.argv[2])
+
+httpd = HTTPServer(('localhost', 5000), Handler)
 httpd.serve_forever()

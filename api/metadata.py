@@ -106,17 +106,21 @@ def generate_metadata(name, function, tidy=True):
         for k in inspect.getfullargspec(function).args
     ]
 
+    result = {
+        k: v for k, v in _convert_hint(hints.get("return")).items()
+        if k in {"dimensionality"}
+    }
+
     if tidy:
         params = [_tidy_metadata(md) for md in params]
 
     md = {
-        "id": name,
-        "name": name,
+        "id": name.upper(),
+        "name": name.upper(),
         "description": doc,
         "parameters": params,
-        "result": _convert_hint(hints.get("return")),
+        "result": result,
     }
     if tidy:
-        md["result"] = _tidy_metadata(md["result"])
         md = _tidy_metadata(md)
     return md
