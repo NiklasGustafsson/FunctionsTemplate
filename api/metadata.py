@@ -96,7 +96,7 @@ def generate_metadata(name, function, tidy=True):
     doc = _dedent(getattr(function, "__doc__", None) or "")
     doc_lines = [s.strip() for s in doc.splitlines()]
 
-    hints = typing.get_type_hints(function, globals())
+    hints = typing.get_type_hints(function, localns=globals())
     params = [
         {
             "name": k,
