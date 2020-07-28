@@ -1,7 +1,13 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import unquote
+import importlib
+import importlib.machinery
+import importlib.util
 import json
+import os
 import sys
+import threading
+import time
 
 from pathlib import Path
 
@@ -11,6 +17,28 @@ sys.path.insert(0, str(ROOT))
 
 import Functions
 from handlers import execute_function, get_all_metadata
+
+
+def autoreload():
+    global Functions
+    while True:
+        time.sleep(1)
+        # TODO: Support potential Functions directory, rather than Functions.py
+        last_mtime = getattr(Functions, "__last_mtime", 0)
+        spec = Functions.__spec__
+        mt = os.stat(spec.origin).st_mtime
+        if last_mtime < mt:
+            print("Reloading Functions.py")
+            Functions = importlib.reload(Functions)
+            try:
+                del Functions.__fmap
+            except AttributeError:
+                pass
+            Functions.__last_mtime = mt + 1
+
+t = threading.Thread(target=autoreload)
+t.daemon = True
+t.start()
 
 PAGE = """<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -76,8 +104,10 @@ if len(sys.argv) >= 2:
         sys.exit(1)
 
     httpd_address[0] = sys.argv[1]
-if len(sys.argv) >= 3:
-    httpd_address[1] = int(sys.argv[2])
+    if len(sys.argv) >= 3:
+        httpd_address[1] = int(sys.argv[2])
 
-httpd = HTTPServer(('localhost', 5000), Handler)
+print("Listening on {}:{}".format(*httpd_address), flush=True)
+
+httpd = HTTPServer(tuple(httpd_address), Handler)
 httpd.serve_forever()
