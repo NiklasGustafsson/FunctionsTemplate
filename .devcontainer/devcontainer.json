@@ -1,5 +1,6 @@
 {
     "image": "mcr.microsoft.com/vscode/devcontainers/python:3.8",
+    "postCreateCommand": "pip install --disable-pip-version-check -r requirements.txt",
     "extensions": [
         "ms-python.python"
     ],
