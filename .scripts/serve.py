@@ -1,4 +1,5 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import unquote
 import json
 import sys
 
@@ -34,7 +35,11 @@ PAGE = """<!DOCTYPE html>
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/functions":
+        if self.path.startswith("/functions?invoke="):
+            _, _, payload = self.path.partition("?invoke=")
+            data = json.loads(unquote(payload))
+            self._send_json(execute_function(Functions, data))
+        elif self.path == "/functions":
             self._send_json(get_all_metadata(Functions))
         elif self.path == "/functions.html":
             self.send_response(200)

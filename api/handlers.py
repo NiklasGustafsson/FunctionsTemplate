@@ -55,12 +55,17 @@ def json_default(o):
 
 def execute_function(functions, payload):
     try:
-        n = payload["id"]
+        n = payload["id"].casefold()
     except LookupError:
         raise LookupError("no 'id' field")
 
+    fmap = getattr(functions, "__fmap", None)
+    if fmap is None:
+        fmap = {k.casefold(): getattr(functions, k) for k in dir(functions)}
+        functions.__fmap = fmap
+
     try:
-        f = getattr(functions, n)
+        f = fmap[n]
     except AttributeError:
         ret = {"error": 2}
     else:
