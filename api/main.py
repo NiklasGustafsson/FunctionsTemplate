@@ -43,7 +43,14 @@ def get_all_metadata(functions):
 def convert_argument(param, arg):
     """Based on metadata in param, return arg updated for the target function."""
     name = param["name"]
-    if param.get("dimensionality") == "matrix":
+    tp = param.get("_python_type")
+    if tp:
+        # Function expects a particular type
+        try:
+            arg = tp(arg)
+        except Exception:
+            logging.exception("Failed to convert %s to %r", name, tp)
+    elif param.get("dimensionality") == "matrix":
         # Attempt to convert to pandas dataframe, if pandas is available
         try:
             import pandas
@@ -53,12 +60,6 @@ def convert_argument(param, arg):
             pass
         except Exception:
             logging.exception("Failed to convert %s to pd.DataFrame", name)
-    elif param.get("_python_type") == "int":
-        # Function expects int, not float, so truncate
-        try:
-            arg = int(arg)
-        except Exception:
-            logging.exception("Failed to convert %s to int", name)
     return arg
 
 
@@ -92,7 +93,7 @@ def execute_function(functions, payload):
             args = [convert_argument(*i) for i in
                     zip(md.get("parameters", []), payload.get("parameters", []))]
 
-            ret = {"result": f(*args), "error": 0}
+            ret = {"error": 0, "result": f(*args)}
         except Exception:
             logging.exception("Error executing %s(%s)", n, args)
             ret = {"error": 1, "result": "".join(traceback.format_exc())}

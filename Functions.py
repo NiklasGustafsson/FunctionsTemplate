@@ -1,5 +1,5 @@
 import itertools
-
+import pandas
 
 def myadd(x, y):
     """Basic addition test"""
@@ -11,7 +11,8 @@ def badadd(x : float, y : float) -> float:
     return x + y + 1
 
 
-def get_table() -> "NumberMatrix":
+#def get_table() -> "NumberMatrix":
+def get_table() -> pandas.DataFrame:
     """Ensure list-of-list can be returned"""
     return [[1, 2], [3, 4]]
 
@@ -28,7 +29,13 @@ def _column_names():
 
 
 def get_pandas(rows : int, columns : int) -> "NumberMatrix":
-    """Ensure pandas DataFrames can be returned"""
+    """Ensure pandas DataFrames can be returned
+
+    rows: Number of rows to generate
+
+    columns: Number of columns to generate
+
+    Returns: two-dimensional matrix of random numbers"""
     import numpy as np
     import pandas as pd
     data = np.random.rand(rows, columns)
@@ -38,5 +45,7 @@ def get_pandas(rows : int, columns : int) -> "NumberMatrix":
 
 
 def get_names(columns : int) -> "StringMatrix":
-    """Test returning a matrix of strings"""
+    """Test returning a matrix of strings
+
+    columns: Number of columns worth of names to return"""
     return [list(itertools.islice(_column_names(), columns))]
