@@ -117,5 +117,6 @@ def generate_metadata(name, function, tidy=True):
         "result": _convert_hint(hints.get("return")),
     }
     if tidy:
+        md["result"] = _tidy_metadata(md["result"])
         md = _tidy_metadata(md)
     return md
