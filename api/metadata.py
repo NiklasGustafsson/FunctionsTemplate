@@ -18,7 +18,7 @@ def _convert_matrix(hint):
     pd = sys.modules.get("pandas")
     if pd:
         if hint is pd.DataFrame:
-            return {"dimensionality": "matrix", "_python_type": pd.Dataframe}
+            return {"dimensionality": "matrix", "_python_type": pd.DataFrame}
     np = sys.modules.get("numpy")
     if np:
         if hint is np.ndarray:
