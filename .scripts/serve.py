@@ -18,7 +18,6 @@ sys.path.insert(0, str(ROOT))
 import Functions
 from handlers import execute_function, get_all_metadata
 
-
 def autoreload():
     global Functions
     while True:
@@ -40,17 +39,19 @@ t = threading.Thread(target=autoreload)
 t.daemon = True
 t.start()
 
-PAGE = """<!DOCTYPE html>
+def _getPageHtml(devMode = False) -> str:
+    pageHtmlFormat = """
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title>Custom Functions</title>
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css">
-    <script src="https://exceljupyter.azurewebsites.net/agave/external/react-16-12-0/umd/react.development.js"></script>
-    <script src="https://exceljupyter.azurewebsites.net/agave/external/react-dom-16-12-0/umd/react-dom.development.js"></script>
+    <script src="https://{0}/agave/external/react-16-12-0/umd/react.development.js"></script>
+    <script src="https://{0}/agave/external/react-dom-16-12-0/umd/react-dom.development.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.debug.js"></script>
-    <script type="text/javascript" src="https://exceljupyter.azurewebsites.net/agave/custom-function-forwarder.bundle.js"></script>
+    <script type="text/javascript" src="https://{0}/agave/custom-function-forwarder.bundle.js"></script>
 </head>
     <body>
         <div id="DivApp">
@@ -58,7 +59,13 @@ PAGE = """<!DOCTYPE html>
         <div id="DivLog">
         </div>
     </body>
-</html>""".encode()
+</html>
+    """
+    if devMode:
+        host = "localhost:8080"
+    else:
+        host = "exceljupyter.azurewebsites.net"
+    return pageHtmlFormat.format(host)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -69,12 +76,14 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(execute_function(Functions, data))
         elif self.path == "/functions":
             self._send_json(get_all_metadata(Functions))
-        elif self.path == "/functions.html":
+        elif self.path == "/functions.html" or path.startswith("/functions.html?"):
             self.send_response(200)
             self.send_header("Content-Type", "text/html;charset=utf-8")
-            self.send_header("Content-Length", str(len(PAGE)))
+            devMode = os.getenv("EXCEL_DEVMODE", "").lower() in {"1", "yes", "true"}
+            pageHtml = _getPageHtml(devMode=devMode).encode()
+            self.send_header("Content-Length", str(len(pageHtml)))
             self.end_headers()
-            self.wfile.write(PAGE)
+            self.wfile.write(pageHtml)
         else:
             self.send_error(404)
 
