@@ -76,14 +76,12 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(execute_function(Functions, data))
         elif self.path == "/functions":
             self._send_json(get_all_metadata(Functions))
-        elif self.path.startswith("/functions.html"):
+        elif self.path == "/functions.html" or path.startswith("/functions.html?"):
             self.send_response(200)
             self.send_header("Content-Type", "text/html;charset=utf-8")
-            devMode = False
-            if bool(os.getenv("EXCEL_DEVMODE")):
-                devMode = True
+            devMode = os.getenv("EXCEL_DEVMODE", "").lower() in {"1", "yes", "true"}
             pageHtml = _getPageHtml(devMode=devMode).encode()
-            self.send_header("Content-Length", str(pageHtml))
+            self.send_header("Content-Length", str(len(pageHtml)))
             self.end_headers()
             self.wfile.write(pageHtml)
         else:
