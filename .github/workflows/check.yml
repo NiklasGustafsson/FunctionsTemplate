@@ -1,9 +1,9 @@
+name: Check
 on:
   push:
     branches:
     - master
-
-name: Check
+  pull_request:
 
 jobs:
   check:
