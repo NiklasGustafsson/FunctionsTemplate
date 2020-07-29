@@ -76,7 +76,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(execute_function(Functions, data))
         elif self.path == "/functions":
             self._send_json(get_all_metadata(Functions))
-        elif self.path == "/functions.html":
+        elif self.path.startswith("/functions.html"):
             self.send_response(200)
             self.send_header("Content-Type", "text/html;charset=utf-8")
             devMode = False
