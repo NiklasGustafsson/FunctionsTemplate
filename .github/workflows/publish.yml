@@ -2,6 +2,7 @@ on:
   push:
     branches:
     - master
+    - e2e
   workflow_dispatch:
     branches:
     - master
