@@ -1,9 +1,12 @@
-name: Publish
 on:
   push:
     branches:
     - master
   workflow_dispatch:
+    branches:
+    - master
+
+name: Publish
 
 jobs:
   build-and-deploy:
