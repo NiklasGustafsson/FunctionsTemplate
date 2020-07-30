@@ -25,7 +25,12 @@ def autoreload():
         # TODO: Support potential Functions directory, rather than Functions.py
         last_mtime = getattr(Functions, "__last_mtime", 0)
         spec = Functions.__spec__
-        mt = os.stat(spec.origin).st_mtime
+        try:
+            mt = os.stat(spec.origin).st_mtime
+        except OSError as ex:
+            print("Failed to check", spec, ex)
+            time.sleep(4)
+            continue
         if last_mtime < mt:
             print("Reloading Functions.py")
             try:
