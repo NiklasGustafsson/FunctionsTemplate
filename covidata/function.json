@@ -21,7 +21,7 @@
       "direction": "in",
       "name": "covblob",
       "path": "snapshot/current",
-      "connection": "e2estore_STORAGE"
+      "connection": "AzureWebJobsStorage"
     }
   ]
 }
