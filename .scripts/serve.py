@@ -28,11 +28,15 @@ def autoreload():
         mt = os.stat(spec.origin).st_mtime
         if last_mtime < mt:
             print("Reloading Functions.py")
-            Functions = importlib.reload(Functions)
             try:
-                del Functions.__fmap
-            except AttributeError:
-                pass
+                Functions = importlib.reload(Functions)
+            except Exception:
+                print("Failed to reload, will try later.")
+            else:
+                try:
+                    del Functions.__fmap
+                except AttributeError:
+                    pass
             Functions.__last_mtime = mt + 1
 
 t = threading.Thread(target=autoreload)
