@@ -5,10 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Functions",
+            "name": "Functions Debug Server",
             "type": "python",
             "request": "launch",
             "program": ".scripts/serve.py",
+            "args": ["localhost", "5000"],
             "console": "integratedTerminal"
         }
     ]

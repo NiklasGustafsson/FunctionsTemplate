@@ -70,13 +70,15 @@ def _getPageHtml(devMode = False) -> str:
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path.startswith("/functions?invoke="):
-            _, _, payload = self.path.partition("?invoke=")
-            data = json.loads(unquote(payload))
-            self._send_json(execute_function(Functions, data))
-        elif self.path == "/functions":
-            self._send_json(get_all_metadata(Functions))
-        elif self.path == "/functions.html" or self.path.startswith("/functions.html?"):
+        path, _, param = self.path.partition("?")
+        if path == "/functions":
+            if param.startswith("invoke="):
+                payload = param.partition("=")[2]
+                data = json.loads(unquote(payload))
+                self._send_json(execute_function(Functions, data))
+            else:
+                self._send_json(get_all_metadata(Functions))
+        elif path == "/functions.html":
             self.send_response(200)
             self.send_header("Content-Type", "text/html;charset=utf-8")
             devMode = os.getenv("EXCEL_DEVMODE", "").lower() in {"1", "yes", "true"}
@@ -84,6 +86,10 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(pageHtml)))
             self.end_headers()
             self.wfile.write(pageHtml)
+        elif path == "/":
+            self.send_response(302)
+            self.send_header("Location", "/functions.html")
+            self.end_headers()
         else:
             self.send_error(404)
 
