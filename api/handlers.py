@@ -77,8 +77,6 @@ def execute_function(functions, payload):
 
             r = f(*args)
             ret = {"error": 0, "result": r}
-            if isinstance(r, dict):
-                ret.update(r)
         except Exception:
             logging.exception("Error executing %s(%s)", n, args)
             ret = {"error": 1, "result": "".join(traceback.format_exc())}
