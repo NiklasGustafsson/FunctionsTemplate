@@ -28,7 +28,7 @@ def countryplot(country : str):
         mime_type = u.getheader("Content-Type")
 
     # We return images as Base-64 encoded binary
-    base64_plot = base64.b64decode(plot)
+    base64_plot = base64.b64encode(plot)
     # JSON blob requires a str, not bytes
     base64_plot_str = base64_plot.decode("ascii")
 
