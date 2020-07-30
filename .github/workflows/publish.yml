@@ -15,8 +15,6 @@ jobs:
     steps:
     - name: 'Checkout' 
       uses: actions/checkout@master
-      with:
-        ref: master
 
     - uses: azure/webapps-deploy@v2
       with:
