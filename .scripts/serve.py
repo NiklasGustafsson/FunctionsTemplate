@@ -73,7 +73,7 @@ def _getPageHtml(devMode = False) -> str:
     if devMode:
         host = "localhost:8080"
     else:
-        host = "exceljupyter.azurewebsites.net"
+        host = "officedev.github.io/custom-functions/lib/excel-codespace"
     return pageHtmlFormat.format(host)
 
 
